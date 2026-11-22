@@ -1,124 +1,136 @@
-# Multi-Channel Social Content Automation Studio
+# Social-Post-Studio - Autonomous Multi-Agent Social Publishing Engine
 
-> Full-stack content generation and cross-platform publishing suite for marketing workflows.
-
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github)](https://github.com/sohailahmed-bsrh/social-post-studio)
-[![Live Showcase](https://img.shields.io/badge/Live-Showcase-0A66C2?style=flat-square&logo=googlechrome)](https://sohail.devsil.com/projects.html)
-[![Author](https://img.shields.io/badge/Author-Sohail%20Ahmed-20BEFF?style=flat-square)](https://sohail.devsil.com)
-
----
-
-## Overview
-
-Content creators and growth teams struggle to maintain consistent publication schedules across disparate social networks with varying format constraints.
-
-This project provides an end-to-end, reproducible implementation engineered to solve this challenge through verified data transformations, reliable algorithms, and production-ready architecture.
+<p align="center">
+  <a href="https://sohail.devsil.com"><strong>Portfolio</strong></a> | 
+  <a href="https://github.com/sohailahmed-bsrh"><strong>GitHub Profile</strong></a> | 
+  <a href="https://github.com/sohailahmed-bsrh/social-post-studio"><strong>Source Repository</strong></a>
+</p>
 
 ---
 
-## Key Features
+## Executive Summary & Problem Statement
 
-- Automated copy adaptation for Twitter, LinkedIn, and Instagram character and tone specifications
-- Integrated image generator previewing promotional card designs
-- Multi-channel scheduling and publication queue management
-- TypeScript agents architecture for background automation tasks
+Maintaining an active, high-quality social media presence across enterprise channels requires multidisciplinary coordination between copywriters, graphic designers, brand compliance managers, and digital publishers. Coordinating these specialized roles manually causes publishing delays and uneven content output.
+
+Social-Post-Studio replaces this fragmented pipeline with an Autonomous Multi-Agent Publishing Engine. Built on TypeScript and Google Gemini, independent autonomous agents coordinate to research topics, write platform-optimized copy, generate branded visual assets via Gemini Imagen 3, validate brand safety, and publish directly through Meta Graph APIs.
 
 ---
 
-## System Architecture
+## Real-World Industry Applications
 
-```mermaid
-flowchart TD
-    Prompt[Campaign Idea / Source Article] --> Agent[Content Generation Agent]
-    Agent --> Twitter[Twitter Thread Formatter]
-    Agent --> LinkedIn[LinkedIn Post Formatter]
-    Agent --> Instagram[Visual Caption Formatter]
-    Twitter --> Queue[Publishing Scheduler Queue]
-    LinkedIn --> Queue
-    Instagram --> Queue
-    Queue --> Publish[Live Social Channel Distribution]
+- **Autonomous Brand Marketing**: Executes automated marketing campaigns with continuous generation of copy, graphics, and scheduled releases.
+- **E-Commerce Product Launches**: Translates product catalog data into eye-catching social posts with promotional imagery and calls to action.
+- **Agency Client Management**: Manages multi-brand social accounts with dedicated persona prompts, image aspect ratios, and compliance rules.
+- **Content Syndication**: Transforms internal engineering updates, blogs, and announcements into bite-sized social updates.
+
+---
+
+## Technical Architecture & Multi-Agent Workflow
+
+The system is organized into modular autonomous agent roles (`agents/main`, `agents/designer`, `agents/publisher`):
+
+```
+       [Topic Directive / Campaign Input]
+                       │
+                       ▼
+            [Content Strategy Agent]
+         (agents/main/src/content.ts)
+                       │
+       ┌───────────────┴───────────────┐
+       ▼                               ▼
+[Copywriting Agent]         [Visual Prompt Agent]
+(Platform Tone, Hooks,     (Art Style, Lighting, Composition)
+ Hashtags, Character Limits)           │
+       │                               ▼
+       │                    [Gemini Image Designer Agent]
+       │                   (agents/designer/src/gemini-image.ts)
+       │                               │
+       └───────────────┬───────────────┘
+                       │
+                       ▼
+            [Brand Compliance Agent]
+         (Tone check, safety filters,
+           aspect-ratio verification)
+                       │
+                       ▼
+            [Social Publisher Agent]
+      (agents/publisher/src/facebook-publish.ts)
+                       │
+                       ▼
+         [Meta Graph API Live Post]
 ```
 
+### Step 1: Content Strategy & Topic Deconstruction
+The strategy agent (`agents/main/src/content.ts`) receives campaign themes, determines audience personas, and produces an outline detailing the target mood, key takeaway, and messaging hierarchy.
+
+### Step 2: Copywriting & Caption Optimization
+The copywriting agent formats the narrative specifically for the target platform: LinkedIn (professional tone, structured whitespace), Instagram/Facebook (engaging hook, concise paragraphs, targeted hashtags).
+
+### Step 3: AI Visual Generation with Gemini Imagen 3
+The designer agent (`agents/designer/src/gemini-image.ts`) translates content themes into rich visual generation prompts. It invokes Google's Gemini / Imagen 3 API, generating high-resolution branded promotional assets with precise artistic framing.
+
+### Step 4: Quality & Compliance Validation
+Before publication, the validation routine evaluates output assets: ensuring image resolutions adhere to platform standards (1:1 square or 4:5 vertical), verifying text safety guidelines, and ensuring hashtag counts remain optimal.
+
+### Step 5: Direct Platform Publishing
+The publisher agent (`agents/publisher/src/facebook-publish.ts`) signs API requests using OAuth credentials and posts the combined image and caption payload to Facebook Pages and Instagram Business accounts via the Meta Graph API.
+
 ---
 
-## Technology Stack
+## Technology Stack & Implementation Specifications
 
-| Technology | Version / Spec | Role in Architecture |
-| :--- | :--- | :--- |
-| **React & TypeScript** | `18.2+` | Frontend studio interface with live card previews |
-| **Node.js & Express** | `18+` | Backend scheduling engine and API connectors |
-| **Drizzle ORM** | `0.28+` | PostgreSQL relational data persistence |
-| **Tailwind CSS** | `3.3+` | Component design system |
+| Component | Technology | Version | Architectural Function |
+| :--- | :--- | :--- | :--- |
+| **Execution Runtime** | Bun Runtime / Node.js | Latest | High-speed TypeScript orchestration and task execution |
+| **Agent Framework** | TypeScript Agent Core | Custom | Decentralized agent messaging and state pipeline |
+| **Generative LLM** | Google Gemini 1.5 Pro | API v1 | Strategic ideation, copywriting, and prompt synthesis |
+| **Image Synthesis** | Google Gemini Imagen 3 | API v1 | Automated high-resolution graphic asset generation |
+| **Social Publishing** | Meta Graph API | v19.0+ | Authenticated direct deployment to Facebook & Instagram |
+| **Frontend UI** | Vite / React / Tailwind | 18.x | Interactive campaign dashboard and agent monitoring |
+| **Database & Auth** | Supabase PostgreSQL | Latest | Campaign log persistence, asset history, and credentials |
 
 ---
 
-## Repository Structure
+## Installation & Setup Guide
 
-```text
-social-post-studio/
-|-- agents/
-|   |-- src/
-|   `-- package.json
-|-- src/
-|-- .env.example
-|-- .gitignore
-|-- package.json
-`-- README.md
+### 1. Environment Configuration
+Create a `.env` file in the repository root:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+FACEBOOK_PAGE_ACCESS_TOKEN=your_meta_page_token
+FACEBOOK_PAGE_ID=your_page_id
 ```
 
----
-
-## Installation and Execution
-
-### Prerequisites
-- Node.js 18+ / Python 3.10+
-- Git version control
-
-### Setup Instructions
-1. Clone the repository:
+### 2. Run Autonomous Pipeline via Bun
 ```bash
-git clone https://github.com/sohailahmed-bsrh/social-post-studio.git
-cd social-post-studio
+bun install
+
+# Test content generation agent:
+bun run agents/main/src/content-cli.ts --topic "AI in Healthcare"
+
+# Run full end-to-end multi-agent pipeline:
+bun run agents/main/src/e2e-test.ts
 ```
-
-2. Configure environment and dependencies:
-```bash
-npm install
-cp .env.example .env
-npm run dev
-```
-
----
-
-## Interface and Verification
-The system produces verifiable execution logs, prediction matrices, or interactive browser interfaces depending on the target mode. Verify operation by executing the commands specified above or inspecting the demonstration notebooks.
-
----
-
-## Author and Contact
-Developed by **Sohail Ahmed** — Full Stack AI Engineer & Machine Learning Specialist.
-- **Portfolio:** [sohail.devsil.com](https://sohail.devsil.com)
-- **GitHub:** [@sohailahmed-bsrh](https://github.com/sohailahmed-bsrh)
-- **Email:** [sohail.bsrh@gmail.com](mailto:sohail.bsrh@gmail.com)
 
 ---
 
 ## Author & Contact Information
 
-<table width="100%" align="center">
+<table width="100%">
   <tr>
-    <td align="center" style="padding: 20px;">
+    <td width="150" align="center" valign="middle">
+      <img src="https://avatars.githubusercontent.com/u/231165170?v=4" width="120" style="border-radius: 50%;" alt="Sohail Ahmed"/>
+    </td>
+    <td>
       <h3>Sohail Ahmed</h3>
-      <p><strong>Full-Stack Artificial Intelligence & Computer Vision Engineer</strong></p>
+      <p><strong>Senior Software Engineer & AI Systems Architect</strong></p>
+      <p>Specializing in Full-Stack AI Application Development, Computer Vision, Deep Learning Pipelines, and Scalable Automation Architectures.</p>
       <p>
-        <a href="https://sohail.devsil.com"><img src="https://img.shields.io/badge/Live_Portfolio-sohail.devsil.com-0052FF?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Portfolio"/></a>
-        <a href="https://github.com/sohailahmed-bsrh"><img src="https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
-        <a href="https://linkedin.com/in/sohail-ahmed-dev"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
-        <a href="mailto:sohail.bsrh@gmail.com"><img src="https://img.shields.io/badge/Email-Contact_Me-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
+        <a href="https://sohail.devsil.com"><strong>Portfolio Website</strong></a> | 
+        <a href="https://github.com/sohailahmed-bsrh"><strong>GitHub Profile</strong></a> | 
+        <a href="https://www.linkedin.com/in/sohail-ahmed-546314316/"><strong>LinkedIn</strong></a> | 
+        <a href="mailto:se906403@gmail.com"><strong>Email Contact</strong></a>
       </p>
-      <p><em>Available for technical roles in Artificial Intelligence, Computer Vision, and Full-Stack Engineering.</em></p>
-      <hr style="border: 0; height: 1px; background: #30363d; margin: 15px 0;">
-      <small>Distributed under the MIT License.</small>
     </td>
   </tr>
 </table>
